@@ -52,6 +52,10 @@ def smart_escape(s, threshold=0.30):
 
     return escape(s)
 
+def ensure_str(value, encoding="utf-8"):
+    if isinstance(value, bytes):
+        return value.decode(encoding)
+    return str(value)
 
 class LDAPInteger(BERInteger):
     pass
@@ -562,7 +566,7 @@ class LDAPFilter_not(LDAPFilter):
         return bytes((self.identification(),)) + int2berlen(len(value)) + value
 
     def asText(self):
-        return "(!" + self.value.asText() + ")"
+        return "(!" + ensure_str(self.value.asText()) + ")"
 
 
 class LDAPFilter_equalityMatch(LDAPAttributeValueAssertion):
@@ -571,9 +575,9 @@ class LDAPFilter_equalityMatch(LDAPAttributeValueAssertion):
     def asText(self):
         return (
             "("
-            + self.attributeDesc.value
+            + ensure_str(self.attributeDesc.value)
             + "="
-            + self.escaper(self.assertionValue.value)
+            + ensure_str(self.escaper(self.assertionValue.value))
             + ")"
         )
 
@@ -582,21 +586,21 @@ class LDAPFilter_substrings_initial(LDAPString):
     tag = CLASS_CONTEXT | 0x00
 
     def asText(self):
-        return self.escaper(self.value)
+        return ensure_str(self.escaper(self.value))
 
 
 class LDAPFilter_substrings_any(LDAPString):
     tag = CLASS_CONTEXT | 0x01
 
     def asText(self):
-        return self.escaper(self.value)
+        return ensure_str(self.escaper(self.value))
 
 
 class LDAPFilter_substrings_final(LDAPString):
     tag = CLASS_CONTEXT | 0x02
 
     def asText(self):
-        return self.escaper(self.value)
+        return ensure_str(self.escaper(self.value))
 
 
 class LDAPBERDecoderContext_Filter_substrings(BERDecoderContext):
@@ -658,13 +662,13 @@ class LDAPFilter_substrings(BERSequence):
                 assert initial is None
                 assert not any
                 assert final is None
-                initial = s.asText()
+                initial = ensure_str(s.asText())
             elif isinstance(s, LDAPFilter_substrings_final):
                 assert final is None
-                final = s.asText()
+                final = ensure_str(s.asText())
             elif isinstance(s, LDAPFilter_substrings_any):
                 assert final is None
-                any.append(s.asText())
+                any.append(ensure_str(s.asText()))
             else:
                 raise NotImplementedError("TODO: Filter type not supported %r" % s)
 
@@ -682,9 +686,9 @@ class LDAPFilter_greaterOrEqual(LDAPAttributeValueAssertion):
     def asText(self):
         return (
             "("
-            + self.attributeDesc.value
+            + ensure_str(self.attributeDesc.value)
             + ">="
-            + self.escaper(self.assertionValue.value)
+            + ensure_str(self.escaper(self.assertionValue.value))
             + ")"
         )
 
@@ -695,9 +699,9 @@ class LDAPFilter_lessOrEqual(LDAPAttributeValueAssertion):
     def asText(self):
         return (
             "("
-            + self.attributeDesc.value
+            + ensure_str(self.attributeDesc.value)
             + "<="
-            + self.escaper(self.assertionValue.value)
+            + ensure_str(self.escaper(self.assertionValue.value))
             + ")"
         )
 
@@ -706,7 +710,7 @@ class LDAPFilter_present(LDAPAttributeDescription):
     tag = CLASS_CONTEXT | 0x07
 
     def asText(self):
-        return "(%s=*)" % self.value
+        return "(%s=*)" % ensure_str(self.value)
 
 
 class LDAPFilter_approxMatch(LDAPAttributeValueAssertion):
@@ -715,9 +719,9 @@ class LDAPFilter_approxMatch(LDAPAttributeValueAssertion):
     def asText(self):
         return (
             "("
-            + self.attributeDesc.value
+            + ensure_str(self.attributeDesc.value)
             + "~="
-            + self.escaper(self.assertionValue.value)
+            + ensure_str(self.escaper(self.assertionValue.value))
             + ")"
         )
 
@@ -856,11 +860,11 @@ class LDAPFilter_extensibleMatch(LDAPMatchingRuleAssertion):
     def asText(self):
         return (
             "("
-            + (self.type.value if self.type else "")
-            + (":dn" if self.dnAttributes and self.dnAttributes.value else "")
-            + ((":" + self.matchingRule.value) if self.matchingRule else "")
+            + ensure_str((self.type.value if self.type else ""))
+            + ensure_str((":dn" if self.dnAttributes and self.dnAttributes.value else ""))
+            + ensure_str(((":" + self.matchingRule.value) if self.matchingRule else ""))
             + ":="
-            + self.escaper(self.matchValue.value)
+            + ensure_str(self.escaper(self.matchValue.value))
             + ")"
         )
 
