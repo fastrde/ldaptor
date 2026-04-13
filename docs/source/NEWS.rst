@@ -1,14 +1,49 @@
 Changelog
 =========
 
-Release.next
--------------------------
+21.2.1 (unreleased)
+-------------------
 
-Features
-^^^^^^^^
+- Dropped support for Python 3.5
+
+
+21.2.0 (2021-02-28)
+-------------------
+
+- fix ``ModuleNotFoundError: No module named 'cStringIO'`` in ldaptor-ldap2pdns.
+- move scripts to console_scripts entry_points
+- replace deprecated calls to ``base64.decodestring`` and ``base64.encodestring``.
+- *This will be the last Ldaptor release to support Python 3.5*.
+
+
+20.1.1 (2020-10-02)
+-------------------
+
+- Updated the object representations of pureber and pureldap containers to
+  directly pass on their contained item object representations. Previously
+  they always passed on the repr after decoding to str with utf-8.
+
+
+20.1.0 (2020-09-30)
+-------------------
+
+- Dropped support for Python 2
+- removed Travis CI
+
+
+20.0.0 (2020-09-30)
+-------------------
 
 Changes
 ^^^^^^^
+
+- The next release v20.1.0 will drop support for Python 2, and require Python~=3.5
+- PyPI release is now done via GitHub Action
+- the ldaptor whl is now built with pep517.
+- the ldaptor whl is tested with tox. The sdist is now untested,
+  deprecated and should only be used for compatability with very old
+  packaging tools.
+- the setup.py file is deprecated and will be removed in a future release.
 
 Bugfixes
 ^^^^^^^^

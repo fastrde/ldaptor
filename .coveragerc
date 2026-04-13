@@ -1,9 +1,0 @@
-[run]
-branch = True
-source = ldaptor
-
-[paths]
-source =
-    ldaptor
-    */site-packages/ldaptor
-    *\site-packages\ldaptor
