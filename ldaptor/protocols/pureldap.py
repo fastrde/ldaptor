@@ -577,7 +577,7 @@ class LDAPFilter_equalityMatch(LDAPAttributeValueAssertion):
             "("
             + ensure_str(self.attributeDesc.value)
             + "="
-            + ensure_str(self.escaper(self.assertionValue.value))
+            + self.escaper(ensure_str(self.assertionValue.value))
             + ")"
         )
 
@@ -586,21 +586,21 @@ class LDAPFilter_substrings_initial(LDAPString):
     tag = CLASS_CONTEXT | 0x00
 
     def asText(self):
-        return ensure_str(self.escaper(self.value))
+        return self.escaper(ensure_str(self.value))
 
 
 class LDAPFilter_substrings_any(LDAPString):
     tag = CLASS_CONTEXT | 0x01
 
     def asText(self):
-        return ensure_str(self.escaper(self.value))
+        return self.escaper(ensure_str(self.value))
 
 
 class LDAPFilter_substrings_final(LDAPString):
     tag = CLASS_CONTEXT | 0x02
 
     def asText(self):
-        return ensure_str(self.escaper(self.value))
+        return self.escaper(ensure_str(self.value))
 
 
 class LDAPBERDecoderContext_Filter_substrings(BERDecoderContext):
@@ -688,7 +688,7 @@ class LDAPFilter_greaterOrEqual(LDAPAttributeValueAssertion):
             "("
             + ensure_str(self.attributeDesc.value)
             + ">="
-            + ensure_str(self.escaper(self.assertionValue.value))
+            + self.escaper(ensure_str(self.assertionValue.value))
             + ")"
         )
 
@@ -701,7 +701,7 @@ class LDAPFilter_lessOrEqual(LDAPAttributeValueAssertion):
             "("
             + ensure_str(self.attributeDesc.value)
             + "<="
-            + ensure_str(self.escaper(self.assertionValue.value))
+            + self.escaper(ensure_str(self.assertionValue.value))
             + ")"
         )
 
@@ -721,7 +721,7 @@ class LDAPFilter_approxMatch(LDAPAttributeValueAssertion):
             "("
             + ensure_str(self.attributeDesc.value)
             + "~="
-            + ensure_str(self.escaper(self.assertionValue.value))
+            + self.escaper(ensure_str(self.assertionValue.value))
             + ")"
         )
 
@@ -864,7 +864,7 @@ class LDAPFilter_extensibleMatch(LDAPMatchingRuleAssertion):
             + ensure_str((":dn" if self.dnAttributes and self.dnAttributes.value else ""))
             + ensure_str(((":" + self.matchingRule.value) if self.matchingRule else ""))
             + ":="
-            + ensure_str(self.escaper(self.matchValue.value))
+            + self.escaper(ensure_str(self.matchValue.value))
             + ")"
         )
 
